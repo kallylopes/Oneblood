@@ -7,11 +7,37 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-        
+
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/w3.css') }}">
 
         <title>{% block title %}{% endblock %} - OneBlood</title>
+        <style>
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Montserrat", sans-serif
+        }
+
+        .w3-row-padding img {
+            margin-bottom: 12px
+        }
+        
+        /* Set the width of the sidenav to 120px */
+        .w3-sidenav {
+            width: 120px; background: #fff;
+        }
+
+        /* Add a left margin to the "page content" that matches the width of the sidenav (120px) */
+        #main {
+            margin-left: 120px;
+        }
+
+        /* Remove margins from "page content" on small screens */
+        @media only screen and (max-width: 600px) {
+            #main {
+                margin-left: 0;
+            }
+        }
+        </style>
     {% endblock %}
   </head>
   <body class="w3-white">
