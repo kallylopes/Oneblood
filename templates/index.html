@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+    <!-- Header/Home -->
+    <header class="w3-container w3-padding-32 w3-center w3-white" id="home">
+        <h1 class="w3-jumbo"><span class="w3-hide-small"></span> Descubra agora!!</h1>
+
+        <p>VOCÊ SABE SE PODE SER UM DOADOR?</p>
+        <img src="/static/images/bg-oneblood.jpg" alt="boy" class="w3-image" width="992" height="1108">
+    </header>
+
+    <!-- About Section -->
+    <div class="w3-content w3-justify w3-text-black w3-padding-64" id="about">
+        <h2 class="w3-text-grey">O oneblood</h2>
+        <hr style="width:200px" class="w3-opacity">
+        <p>
+            Morbi leo mi, nonummy eget, tristique non, rhoncus non, leo. Nullam faucibus mi quis velit. Integer in sapien. Fusce tellus odio, dapibus id, fermentum quis, suscipit id, erat. Fusce aliquam vestibulum ipsum. Aliquam erat volutpat. Pellentesque sapien. Cras elementum. Nulla pulvinar eleifend sem. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque porta. Vivamus porttitor turpis ac leo.
+        </p>
+        <p>
+            In sem justo, commodo ut, suscipit at, pharetra vitae, orci. Duis sapien nunc, commodo et, interdum suscipit, sollicitudin et, dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam id dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris dictum facilisis augue. Fusce tellus. Pellentesque arcu. Maecenas fermentum, sem in pharetra pellentesque, velit turpis volutpat ante, in pharetra metus odio a lectus.
+        </p>
+        <p>
+            Morbi a metus. Phasellus enim erat, vestibulum vel, aliquam a, posuere eu, velit. Nullam sapien sem, ornare ac, nonummy non, lobortis a, enim. Nunc tincidunt ante vitae massa. Duis ante orci, molestie vitae, vehicula venenatis, tincidunt ac, pede. Nulla accumsan, elit sit amet varius semper, nulla mauris mollis quam, tempor suscipit diam nulla vel leo. Etiam commodo dui eget wisi. Donec iaculis gravida nulla. Donec quis nibh at felis congue commodo. Etiam bibendum elit eget erat.
+        </p>
+
+        <h3 class="w3-padding-16 w3-text-grey">NÍVEIS DE SANGUE</h3>
+        <p class="w3-wide">A+</p>
+        <div class="w3-progress-container">
+          <div class="w3-progressbar w3-red" style="width:5%"></div>
+        </div>
+        <p class="w3-wide">B+</p>
+        <div class="w3-progress-container">
+          <div class="w3-progressbar w3-red" style="width:5%"></div>
+        </div>
+        <p class="w3-wide">AB+</p>
+        <div class="w3-progress-container">
+          <div class="w3-progressbar w3-red" style="width:10%"></div>
+        </div><br>
+
+        <div class="w3-row w3-center w3-padding-16 w3-section w3-light-grey">
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge">11+</span><br>
+                AINDA
+            </div>
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge">55+</span><br>
+               NÃO SEI
+            </div>
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge">89+</span><br>
+                QUE DADOS
+            </div>
+            <div class="w3-quarter w3-section">
+                <span class="w3-xlarge">150+</span><br>
+                BOTAR
+            </div>
+        </div>
+        <!-- END PAGE CONTENT -->
+    </div>
+
+    <!-- Contact Section -->
+    <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
+        <h2 class="w3-text-grey">SIGN UP</h2>
+        <hr style="width:200px" class="w3-opacity">
+
+        <p><input class="w3-input w3-border w3-padding-16" type="text" placeholder="Name"></p>
+        <p><input class="w3-input w3-border w3-padding-16" type="text" placeholder="Email"></p>
+        <p><input class="w3-input w3-border w3-padding-16" type="password" placeholder="Password"></p>
+        <p><input class="w3-input w3-border w3-padding-16" type="password" placeholder="Confirm password"></p>
+        <p>
+            <button class="w3-btn w3-light-grey w3-padding-large w3-hover-grey">
+                <i class="fa fa-paper-plane"></i> Login
+            </button>
+        </p>
+        <!-- End Contact Section -->
+    </div>
+
+    <!-- Footer -->
+    <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
+        <a href="#" class="w3-hover-text-indigo"><i class="fa fa-facebook-official"></i></a>
+        <a href="#" class="w3-hover-text-red"><i class="fa fa-pinterest-p"></i></a>
+        <a href="#" class="w3-hover-text-light-blue"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="w3-hover-text-grey"><i class="fa fa-flickr"></i></a>
+        <a href="#" class="w3-hover-text-indigo"><i class="fa fa-linkedin"></i></a>
+        <p class="w3-medium">Powered by <a href="http://www.w3schools.com/w3css/default.asp" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+        <!-- End footer -->
+    </footer>
+{% endblock %}
