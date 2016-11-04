@@ -1,0 +1,10 @@
+{% from "form.html" import render_field %}
+    <form class="form-inline" method=post action="/add">
+          <dl>
+              {{ render_field(form.question) }}
+              {{ render_field(form.man_temp) }}
+              {{ render_field(form.woman_temp) }}
+              {{ render_field(form.status) }}
+          </dl>
+        <input class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" type="submit">
+</form>
