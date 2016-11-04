@@ -5,21 +5,29 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/gabriela/Documents/developer/kally-quiz/Oneblood/oneblood.db'
+# 'sqlite:////
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/gabriela/Documents/developer/kally-quiz/Oneblood/oneblood.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oneblood.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+
 temp_final = 0
-quizz = []
+list_quizz = []
+current_quizz = None
+sexo = None
 
 class Quizz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(800))
     man_temp = db.Column(db.Integer)
     woman_temp = db.Column(db.Integer)
+    status = db.Column(db.Integer)
 
-    def __init__(self, question, man_temp, woman_temp):
+    def __init__(self, question, man_temp, woman_temp, status):
         self.question = question
         self.man_temp = man_temp
         self.woman_temp = woman_temp
+        self.status = status
 
     def __repr__(self):
         return '<Quizz %r>' % self.question
@@ -32,40 +40,47 @@ class Quizz(db.Model):
 
 @app.route('/', methods=['post', 'get'])
 def index():
-    global temp_final, quizz
+    global list_quizz, current_quizz, sexo, temp_final
     if request.method == 'POST':
-        if not quizz:
+        if len(list_quizz) == 0:
             return render_template('index.html', temp=temp_final)
-        current_question = quizz.pop()
-        sex = ''
+
         form = QuizzForm()
-        if form.validate_on_submit():
-            # verificar se foi SIM
-            if form.opt.data:
-                # t = -1
-                # temp_final = 9
-                if sex == 'feminino':
-                    t = current_question.woman_temp
-                else:
-                    t = current_question.man_temp
-                if t == -1 or t > temp_final:
-                    temp_final = t
-        else:
-            error = form.errors
+
+        if not sexo:
+            sexo = form.opt.data
+            current_quizz = list_quizz.pop()
+            label = current_quizz.question
+        elif form.opt.data:
+            if sexo == 0:
+                t = current_quizz.woman_temp
+            else:
+                t = current_quizz.man_temp
+            if t == -1 or t > temp_final:
+                temp_final = t
+
+            while True:
+                if len(list_quizz) == 0:
+                    return render_template('index.html', temp=temp_final)
+                current_quizz = list_quizz.pop()
+                label = current_quizz.question
+                if current_quizz.status != sexo:
+                    continue
     else:
-        quizz = Quizz.query.all()
         form = SexForm()
-    return render_template('index.html', form=form)
+        label = form.opt.label
+        list_quizz = Quizz.query.all()
+    return render_template('index.html', form=form, label=label)
 
 
 @app.route('/add', methods=['post', 'get'])
 def players():
     form = RegistrationQuizzForm(request.form)
-    if request.method == "POST" and form.validate():
-        q = Quizz(form.question.data, form.man_temp.data, form.woman_temp.data)
+    if request.method == "POST":
+        q = Quizz(form.question.data, form.man_temp.data, form.woman_temp.data, form.status.data)
         db.session.add(q)
         db.session.commit()
-    return render_template('add_question.html', form=form)
+    return render_template('add_question.html', form=form, quizz=Quizz.query.all())
 
 
 if __name__ == '__main__':

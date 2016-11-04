@@ -69,21 +69,13 @@
         {% else %}
             <form method="post">
                 {{ form.hidden_tag() }}
+                {{ label }}
                 {{ form.opt }}
+                <br>
+                <hr style="width:200px" class="w3-opacity">
                 <input class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" type="submit">
             </form>
         {% endif %}
-        <!--
-        <p><input class="w3-input w3-border w3-padding-16" type="text" placeholder="Name"></p>
-        <p><input class="w3-input w3-border w3-padding-16" type="text" placeholder="Email"></p>
-        <p><input class="w3-input w3-border w3-padding-16" type="password" placeholder="Password"></p>
-        <p><input class="w3-input w3-border w3-padding-16" type="password" placeholder="Confirm password"></p>
-        <p>
-            <button class="w3-btn w3-light-grey w3-padding-large w3-hover-grey">
-                <i class="fa fa-paper-plane"></i> Login
-            </button>
-        </p>
-        <!-- End Contact Section -->
     </div>
 
     <!-- Footer -->
