@@ -77,7 +77,18 @@ def players():
         q = Quizz(form.question.data, form.man_temp.data, form.woman_temp.data, form.status.data)
         db.session.add(q)
         db.session.commit()
-    return render_template('add_question.html', form=form, quizz=Quizz.query.all())
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
+
+
+@app.route('/delete', methods=['POST', 'GET'])
+def delete():
+    form = RegistrationQuizzForm(request.form)
+
+    if request.method == "POST":
+        id = int(request.form['id'])
+        db.session.delete(Quizz.query.get(id))
+        db.session.commit()
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
 
 
 if __name__ == '__main__':

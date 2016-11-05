@@ -10,7 +10,12 @@
 
 
 <div>
-    {% for q in quizz %}
-        <p>{{ q.id }} | {{ q.question }}</p>
+    {% for quizz in quizzes %}
+        <p>{{ quizz.id }} | {{ quizz.question }}</p>
     {% endfor %}
 </div>
+
+<form class="form" action="/delete" method='POST'>
+     <input name="id" type="text" />
+     <input type="submit" value="Delete quizz" />
+</form>
