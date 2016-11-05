@@ -1,20 +1,16 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
 
 from forms import QuizzForm, SexForm, RegistrationQuizzForm
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t'
-# 'sqlite:////
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/gabriela/Documents/developer/kally-quiz/Oneblood/oneblood.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oneblood.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
-temp_final = 0
 list_quizz = []
-current_quizz = None
-sexo = None
+
 
 class Quizz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,36 +36,37 @@ class Quizz(db.Model):
 
 @app.route('/', methods=['post', 'get'])
 def index():
-    global list_quizz, current_quizz, sexo, temp_final
+    global list_quizz
     if request.method == 'POST':
         if len(list_quizz) == 0:
-            return render_template('index.html', temp=temp_final)
+            return render_template('index.html', temp=session['final_temp'])
 
         form = QuizzForm()
 
-        if not sexo:
-            sexo = form.opt.data
-            current_quizz = list_quizz.pop()
-            label = current_quizz.question
+        if 'sex' not in session:
+            session['sex'] = form.opt.data
+            session['current_quizz'] = list_quizz.pop()
+            label = session['current_quizz'].question
         elif form.opt.data:
-            if sexo == 0:
-                t = current_quizz.woman_temp
+            if session['sex'] == 0:
+                t = session['current_quizz'].woman_temp
             else:
-                t = current_quizz.man_temp
-            if t == -1 or t > temp_final:
-                temp_final = t
+                t = session['current_quizz'].man_temp
+            if t == -1 or t > session['final_temp']:
+                session['final_temp'] = t
 
             while True:
                 if len(list_quizz) == 0:
-                    return render_template('index.html', temp=temp_final)
+                    return render_template('index.html', temp=session['final_temp'])
                 current_quizz = list_quizz.pop()
                 label = current_quizz.question
-                if current_quizz.status != sexo:
+                if current_quizz.status != session['sex']:
                     continue
     else:
         form = SexForm()
         label = form.opt.label
         list_quizz = Quizz.query.all()
+        session['final_temp'] = 0
     return render_template('index.html', form=form, label=label)
 
 
