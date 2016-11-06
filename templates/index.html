@@ -13,7 +13,26 @@
 
         <p>VOCÊ SABE SE PODE SER UM DOADOR?</p>
     </header>
-
+    
+ <!-- Form Section -->
+    <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
+        <h2 class="w3-text-grey">Posso doar?</h2>
+        <hr style="width:200px" class="w3-opacity">
+        {% if temp and temp == -1 %}
+                Você não poderá doar.
+        {% elif temp and temp > 0 %}
+                 Você não poderá doar por: {{ temp }} meses.
+        {% else %}
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {{ label }}
+                {{ form.opt }}
+                <br>
+                <hr style="width:200px" class="w3-opacity">
+                <input class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" type="submit">
+            </form>
+        {% endif %}
+    </div>
     <!-- About Section -->
     <div class="w3-content w3-justify w3-text-black w3-padding-64" id="about">
         <h2 class="w3-text-grey">O oneblood</h2>
@@ -61,27 +80,7 @@
             </div>
         </div>
         <!-- END PAGE CONTENT -->
-    </div>
-
-    <!-- Form Section -->
-    <div class="w3-padding-64 w3-content w3-text-grey" id="contact">
-        <h2 class="w3-text-grey">Posso doar?</h2>
-        <hr style="width:200px" class="w3-opacity">
-        {% if temp and temp == -1 %}
-                Você não poderá doar.
-        {% elif temp and temp > 0 %}
-                 Você não poderá doar por: {{ temp }} meses.
-        {% else %}
-            <form method="post">
-                {{ form.hidden_tag() }}
-                {{ label }}
-                {{ form.opt }}
-                <br>
-                <hr style="width:200px" class="w3-opacity">
-                <input class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" type="submit">
-            </form>
-        {% endif %}
-    </div>
+    </div> 
 
     <!-- Footer -->
     <footer class="w3-content w3-padding-64 w3-text-grey w3-xlarge">
