@@ -1,7 +1,13 @@
+from json import JSONDecoder
+
 from flask import Flask, render_template, request, session
 
 from forms import QuizzForm, SexForm, RegistrationQuizzForm
 from flask_sqlalchemy import SQLAlchemy
+
+import logging
+import json
+
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t'
@@ -10,6 +16,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 list_quizz = []
+current_quizz = None
 
 
 class Quizz(db.Model):
@@ -20,13 +27,14 @@ class Quizz(db.Model):
     status = db.Column(db.Integer)
 
     def __init__(self, question, man_temp, woman_temp, status):
-        self.question = question
+        self.question = question.encode('utf8')
         self.man_temp = man_temp
         self.woman_temp = woman_temp
         self.status = status
 
     def __repr__(self):
-        return '<Quizz %r>' % self.question
+        obj_json = '{"question": %r }' % self.question
+        return json.dumps(obj_json)
 
     def __eq__(self, other):
         if not isinstance(other, Quizz):
@@ -36,7 +44,7 @@ class Quizz(db.Model):
 
 @app.route('/', methods=['post', 'get'])
 def index():
-    global list_quizz
+    global list_quizz, current_quizz
     if request.method == 'POST':
         if len(list_quizz) == 0:
             return render_template('index.html', temp=session['final_temp'])
@@ -45,13 +53,22 @@ def index():
 
         if 'sex' not in session:
             session['sex'] = form.opt.data
-            session['current_quizz'] = list_quizz.pop()
-            label = session['current_quizz'].question
+            app.logger.info('Sex {}'.format(session['sex']))
+
+            # session['current_quizz'] = list_quizz.pop()
+            current_quizz = list_quizz.pop()
+            # app.logger.info(session['current_quizz'])
+
+            label = current_quizz.question # session['current_quizz'].question
+            app.logger.info(label)
+
         elif form.opt.data:
             if session['sex'] == 0:
-                t = session['current_quizz'].woman_temp
+                # t = session['current_quizz'].woman_temp
+                t = current_quizz.woman_temp
             else:
-                t = session['current_quizz'].man_temp
+                # t = session['current_quizz'].man_temp
+                t = current_quizz
             if t == -1 or t > session['final_temp']:
                 session['final_temp'] = t
 
@@ -63,10 +80,17 @@ def index():
                 if current_quizz.status != session['sex']:
                     continue
     else:
+        app.logger.info('Index page')
+
         form = SexForm()
         label = form.opt.label
         list_quizz = Quizz.query.all()
+
         session['final_temp'] = 0
+        session.pop('final_temp', None)
+        # session.pop('current_quizz', None)
+        session.pop('sex', None)
+
     return render_template('index.html', form=form, label=label)
 
 

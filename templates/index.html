@@ -65,7 +65,7 @@
         <h2 class="w3-text-grey">Posso doar?</h2>
         <hr style="width:200px" class="w3-opacity">
         {% if temp %}
-                {{ temp }}
+                Você não poderá doar por: {{ temp }} meses.
         {% else %}
             <form method="post">
                 {{ form.hidden_tag() }}

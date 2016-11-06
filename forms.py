@@ -7,8 +7,6 @@ from wtforms.fields import RadioField, StringField, IntegerField
 
 import sys
 
-import sys
-
 reload(sys)
 sys.setdefaultencoding("utf-8")
 

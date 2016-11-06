@@ -1,3 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}Quizzes{% endblock %}
+
+
+{% block content %}
+
 {% from "form.html" import render_field %}
     <form class="form-inline" method=post action="/add">
         {{ render_field(form.question) }}
@@ -19,3 +25,5 @@
      <input name="id" type="text" />
      <input type="submit" value="Delete quizz" />
 </form>
+
+{% endblock %}
