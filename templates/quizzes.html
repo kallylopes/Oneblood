@@ -9,7 +9,7 @@
 
 <h3>Cadastrar</h3>
 {% from "form.html" import render_field %}
-    <form class="form-inline" method=post action="/add">
+    <form class="form-inline" action="{{ action }}" method="{{ method | d("POST") }}">
         <p><strong>OBS:</strong> Coloque <strong>-1</strong> no campo de tempo caso em resposta positiva, a pessoa não possa doar por tempo indeterminado.</p>
         {{ render_field(form.question) }}
         {{ render_field(form.man_temp) }}
@@ -21,10 +21,39 @@
 
 <hr>
 <h3>Questões</h3>
-{% for quizz in quizzes %}
-    <p>{{ quizz.id }} | {{ quizz.question }} &nbsp;
-    <a href="{{ url_for('edit', id=quizz.id) }}">Edit</a> // <a href="{{ url_for('delete', id=quizz.id) }}">Delete</a></p>
-    <hr>
-{% endfor %}
+<table>
+    <tr>
+        <th>#ID</th>
+        <th>Questão</th>
+        <th>Tempo p/ homem</th>
+        <th>Tempo p/ mulher</th>
+        <th>Alvo da pergunta</th>
+        <th></th>
+    </tr>
+    {% for quizz in quizzes %}
+        <tr>
+            <td>{{ quizz.id }}</td>
+            <td>{{ quizz.question }}</td>
+            {% if quizz.man_temp == -1 %}
+                <td>tempo indeterminado</td>
+            {% else %}
+                <td>{{ quizz.man_temp }}</td>
+            {% endif %}
+            {% if quizz.woman_temp == -1 %}
+                <td>tempo indeterminado</td>
+            {% else %}
+                <td>{{ quizz.woman_temp }}</td>
+            {% endif %}
+            {% if quizz.status == 0 %}
+                <td>mulheres</td>
+            {% elif quizz.status == 1 %}
+                <td>homens</td>
+            {% else %}
+                <td>ambos</td>
+            {% endif %}
+            <td><a href="{{ url_for('edit', id=quizz.id) }}">Edit</a> // <a href="{{ url_for('delete', id=quizz.id) }}">Delete</a></p></td>
+        </tr>
+    {% endfor %}
+</table>
 </div>
 {% endblock %}

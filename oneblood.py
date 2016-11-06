@@ -1,6 +1,6 @@
 from json import JSONDecoder
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, redirect, url_for
 
 from forms import QuizzForm, SexForm, RegistrationQuizzForm
 from flask_sqlalchemy import SQLAlchemy
@@ -58,7 +58,7 @@ def index():
     global list_quizz, current_quizz, final_temp
 
     if request.method == 'POST':
-        if not list_quizz:
+        if len(list_quizz) == 0:
             return render_template('index.html', temp=final_temp)
 
         form = QuizzForm()
@@ -78,7 +78,7 @@ def index():
                 final_temp = t
 
         while True:
-            if not list_quizz:
+            if len(list_quizz) == 0:
                 return render_template('index.html', temp=final_temp)
             current_quizz = list_quizz.pop()
             label = current_quizz.question
@@ -99,7 +99,7 @@ def index():
 @app.route('/admin')
 def admin():
     form = RegistrationQuizzForm(request.form)
-    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all(), action="/add")
 
 
 @app.route('/add', methods=['POST'])
@@ -109,16 +109,15 @@ def players():
         q = Quizz(form.question.data, form.man_temp.data, form.woman_temp.data, form.status.data)
         db.session.add(q)
         db.session.commit()
-    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
+    return redirect(url_for('admin'))
 
 
 @app.route('/delete/<int:id>', methods=['GET'])
 def delete(id):
-    form = RegistrationQuizzForm(request.form)
     q = Quizz.query.filter(Quizz.id == id).first()
     db.session.delete(q)
     db.session.commit()
-    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
+    return redirect(url_for('admin'))
 
 
 @app.route('/edit/<int:id>', methods=['GET'])
@@ -128,9 +127,21 @@ def edit(id):
     form.question.data = q.question
     form.man_temp.data = q.man_temp
     form.woman_temp.data = q.woman_temp
-    form.status.data = q.status  # TODO: verificar o radio button
-    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
+    # TODO: verificar o radio button
+    form.status.data = q.status
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all(), action="/update/{}".format(q.id))
 
+
+@app.route('/update/<int:id>', methods=['POST'])
+def update(id):
+    form = RegistrationQuizzForm(request.form)
+    q = Quizz.query.filter_by(id=id).first()
+    q.question = form.question.data
+    q.man_temp = form.man_temp.data
+    q.woman_temp = form.woman_temp.data
+    q.status = form.status.data
+    db.session.commit()
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
