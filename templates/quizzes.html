@@ -3,7 +3,11 @@
 
 
 {% block content %}
+<div class="w3-padding-large" id="main">
+    <h1>Página ADMIN</h1>
+    <hr>
 
+<h3>Cadastrar</h3>
 {% from "form.html" import render_field %}
     <form class="form-inline" method=post action="/add">
         {{ render_field(form.question) }}
@@ -14,16 +18,12 @@
         <p><input class="w3-btn w3-light-grey w3-padding-large w3-hover-grey" type=submit value=Register></p>
 </form>
 
-
-<div>
-    {% for quizz in quizzes %}
-        <p>{{ quizz.id }} | {{ quizz.question }}</p>
-    {% endfor %}
+<hr>
+<h3>Questões</h3>
+{% for quizz in quizzes %}
+    <p>{{ quizz.id }} | {{ quizz.question }} &nbsp;
+    <a href="{{ url_for('edit', id=quizz.id) }}">Edit</a> // <a href="{{ url_for('delete', id=quizz.id) }}">Delete</a></p>
+    <hr>
+{% endfor %}
 </div>
-
-<form class="form" action="/delete" method='POST'>
-     <input name="id" type="text" />
-     <input type="submit" value="Delete quizz" />
-</form>
-
 {% endblock %}

@@ -65,7 +65,13 @@ def index():
     return render_template('index.html', form=form, label=label)
 
 
-@app.route('/add', methods=['post', 'get'])
+@app.route('/admin', methods=['POST', 'GET'])
+def admin():
+    form = RegistrationQuizzForm(request.form)
+    return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
+
+
+@app.route('/add', methods=['POST'])
 def players():
     form = RegistrationQuizzForm(request.form)
     if request.method == "POST":
@@ -75,15 +81,21 @@ def players():
     return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
 
 
-@app.route('/delete', methods=['POST', 'GET'])
-def delete():
+@app.route('/delete/<int:id>', methods=['GET'])
+def delete(id):
     form = RegistrationQuizzForm(request.form)
-
-    if request.method == "POST":
-        id = int(request.form['id'])
-        db.session.delete(models.Quizz.query.get(id))
-        db.session.commit()
+    q = models.Quizz.query.filter(models.Quizz.id == id).first()
+    current_db_sessions = db.object_session()
+    current_db_sessions.delete(q)
+    db.session.commit()
+    #db.session.delete(q)
+    #db.session.commit()
     return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
+
+
+@app.route('/edit', methods=['GET'])
+def edit():
+    pass
 
 
 if __name__ == '__main__':
