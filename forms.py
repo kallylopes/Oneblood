@@ -20,7 +20,7 @@ class SexForm(FlaskForm):
 
 
 class RegistrationQuizzForm(FlaskForm):
-    question = StringField('Question', [validators.Length(min=4, max=800)])
-    man_temp = IntegerField('Man Temp')
-    woman_temp = IntegerField('Women Temp')
-    status = IntegerField('Status')
+    question = StringField('Questão', [validators.Length(min=4, max=800)])
+    man_temp = IntegerField('Tempo para o homem')
+    woman_temp = IntegerField('Tempo para a mulher')
+    status = RadioField('Para quem é a pergunta?', choices=[(0, 'Mulher'), (1, 'Homem'), (2, 'Ambos')])

@@ -10,6 +10,7 @@
 <h3>Cadastrar</h3>
 {% from "form.html" import render_field %}
     <form class="form-inline" method=post action="/add">
+        <p><strong>OBS:</strong> Coloque <strong>-1</strong> no campo de tempo caso em resposta positiva, a pessoa não possa doar por tempo indeterminado.</p>
         {{ render_field(form.question) }}
         {{ render_field(form.man_temp) }}
         {{ render_field(form.woman_temp) }}
