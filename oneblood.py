@@ -5,13 +5,31 @@ from flask import Flask, render_template, request, session
 from forms import QuizzForm, SexForm, RegistrationQuizzForm
 from flask_sqlalchemy import SQLAlchemy
 
-import models
 
 app = Flask(__name__)
 app.secret_key = 's3cr3t'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///oneblood.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+
+
+class Quizz(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(800))
+    man_temp = db.Column(db.Integer)
+    woman_temp = db.Column(db.Integer)
+    status = db.Column(db.Integer)
+
+    def __init__(self, question, man_temp, woman_temp, status):
+        self.question = question.encode('utf8')
+        self.man_temp = man_temp
+        self.woman_temp = woman_temp
+        self.status = status
+
+    def __eq__(self, other):
+        if not isinstance(other, Quizz):
+            return False
+        return self.id == other.id
 
 list_quizz = []
 current_quizz = None
@@ -57,7 +75,7 @@ def index():
 
         form = SexForm()
         label = form.opt.label
-        list_quizz = models.Quizz.query.all()
+        list_quizz = Quizz.query.all()
 
         final_temp = 0
         session.pop('sex', None)
@@ -68,29 +86,29 @@ def index():
 @app.route('/admin', methods=['POST', 'GET'])
 def admin():
     form = RegistrationQuizzForm(request.form)
-    return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
 
 
 @app.route('/add', methods=['POST'])
 def players():
     form = RegistrationQuizzForm(request.form)
     if request.method == "POST":
-        q = models.Quizz(form.question.data, form.man_temp.data, form.woman_temp.data, form.status.data)
+        q = Quizz(form.question.data, form.man_temp.data, form.woman_temp.data, form.status.data)
         db.session.add(q)
         db.session.commit()
-    return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
 
 
 @app.route('/delete/<int:id>', methods=['GET'])
 def delete(id):
     form = RegistrationQuizzForm(request.form)
-    q = models.Quizz.query.filter(models.Quizz.id == id).first()
+    q = Quizz.query.filter(Quizz.id == id).first()
     current_db_sessions = db.object_session()
     current_db_sessions.delete(q)
     db.session.commit()
-    #db.session.delete(q)
-    #db.session.commit()
-    return render_template('quizzes.html', form=form, quizzes=models.Quizz.query.all())
+    # db.session.delete(q)
+    # db.session.commit()
+    return render_template('quizzes.html', form=form, quizzes=Quizz.query.all())
 
 
 @app.route('/edit', methods=['GET'])
